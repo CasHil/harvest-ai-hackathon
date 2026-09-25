@@ -5,6 +5,7 @@ import { HarvesterWorkbench } from './components/HarvesterWorkbench';
 import { HarvestCVPreview } from './components/HarvestCVPreview';
 import { POApprovalPanel } from './components/POApprovalPanel';
 import { FileEdit, ShieldCheck, BookOpen } from 'lucide-react';
+import harvestLogo from './assets/harvest-logo.png';
 import './App.css';
 
 export default function App() {
@@ -17,7 +18,7 @@ export default function App() {
       <header className="header no-print">
         <div className="brand">
           <div className="logo-badge">
-            <img src="/harvest-logo.png" alt="Harvest" className="harvest-brand-logo" />
+            <img src={harvestLogo} alt="Harvest" className="harvest-brand-logo" />
           </div>
           <span className="header-divider">|</span>
           <span className="header-subtitle">CV Generator</span>

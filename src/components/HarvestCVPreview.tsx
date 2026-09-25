@@ -2,6 +2,8 @@ import React from 'react';
 import { HarvestCV } from '../types/cv';
 import { ShieldCheck, Download, Printer, User, MapPin, Calendar, BookOpen, Briefcase, FolderGit2 } from 'lucide-react';
 
+import harvestLogo from '../assets/harvest-logo.png';
+
 interface Props {
   cv: HarvestCV;
 }
@@ -62,7 +64,7 @@ export const HarvestCVPreview: React.FC<Props> = ({ cv }) => {
           {/* PAGE 1 HEADER BLOCK */}
           <header className="page-header">
             <div className="header-info">
-              <div className="brand-tag flex-align"><img src="/harvest-logo.png" alt="Harvest" style={{ height: '16px', marginRight: '4px' }} /> HARVEST IT POST-MASTER</div>
+              <div className="brand-tag flex-align"><img src={harvestLogo} alt="Harvest" style={{ height: '16px', marginRight: '4px' }} /> HARVEST IT POST-MASTER</div>
               <h1 className="candidate-name">{cv.personalInfo.fullName || "Naam Harvester"}</h1>
               <div className="candidate-subtitle">{cv.personalInfo.subtitle || "Functietitel"}</div>
               <p className="candidate-summary">{cv.personalInfo.summary || "Korte profileringstekst..."}</p>
