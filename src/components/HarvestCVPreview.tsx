@@ -64,7 +64,15 @@ export const HarvestCVPreview: React.FC<Props> = ({ cv }) => {
           {/* PAGE 1 HEADER BLOCK */}
           <header className="page-header">
             <div className="header-info">
-              <div className="brand-tag flex-align"><img src={harvestLogo} alt="Harvest" style={{ height: '16px', marginRight: '4px' }} /> HARVEST IT POST-MASTER</div>
+              <div className="brand-tag flex-align">
+                <img 
+                  src={`${import.meta.env.BASE_URL}harvest-logo.png`} 
+                  onError={(e) => { e.currentTarget.src = harvestLogo; }}
+                  alt="Harvest" 
+                  style={{ height: '16px', marginRight: '4px' }} 
+                /> 
+                HARVEST IT POST-MASTER
+              </div>
               <h1 className="candidate-name">{cv.personalInfo.fullName || "Naam Harvester"}</h1>
               <div className="candidate-subtitle">{cv.personalInfo.subtitle || "Functietitel"}</div>
               <p className="candidate-summary">{cv.personalInfo.summary || "Korte profileringstekst..."}</p>

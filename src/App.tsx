@@ -8,6 +8,8 @@ import { FileEdit, ShieldCheck, BookOpen } from 'lucide-react';
 import { harvestLogo } from './assets/harvestLogo';
 import './App.css';
 
+const logoSrc = `${import.meta.env.BASE_URL}harvest-logo.png`;
+
 export default function App() {
   const [cv, setCv] = useState<HarvestCV>(initialSampleCV);
   const [activeTab, setActiveTab] = useState<'BUILDER' | 'PO_REVIEW'>('BUILDER');
@@ -18,7 +20,12 @@ export default function App() {
       <header className="header no-print">
         <div className="brand">
           <div className="logo-badge">
-            <img src={harvestLogo} alt="Harvest" className="harvest-brand-logo" />
+            <img 
+              src={logoSrc} 
+              onError={(e) => { e.currentTarget.src = harvestLogo; }}
+              alt="Harvest" 
+              className="harvest-brand-logo" 
+            />
           </div>
           <span className="header-divider">|</span>
           <span className="header-subtitle">CV Generator</span>
