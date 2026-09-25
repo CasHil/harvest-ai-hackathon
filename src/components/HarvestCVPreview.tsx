@@ -2,7 +2,7 @@ import React from 'react';
 import { HarvestCV } from '../types/cv';
 import { ShieldCheck, Download, Printer, User, MapPin, Calendar, BookOpen, Briefcase, FolderGit2 } from 'lucide-react';
 
-import harvestLogo from '../assets/harvest-logo.png';
+import { harvestLogo } from '../assets/harvestLogo';
 
 interface Props {
   cv: HarvestCV;

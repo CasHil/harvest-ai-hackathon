@@ -5,7 +5,7 @@ import { HarvesterWorkbench } from './components/HarvesterWorkbench';
 import { HarvestCVPreview } from './components/HarvestCVPreview';
 import { POApprovalPanel } from './components/POApprovalPanel';
 import { FileEdit, ShieldCheck, BookOpen } from 'lucide-react';
-import harvestLogo from './assets/harvest-logo.png';
+import { harvestLogo } from './assets/harvestLogo';
 import './App.css';
 
 export default function App() {
