@@ -4,7 +4,7 @@ import { HarvestCV } from './types/cv';
 import { HarvesterWorkbench } from './components/HarvesterWorkbench';
 import { HarvestCVPreview } from './components/HarvestCVPreview';
 import { POApprovalPanel } from './components/POApprovalPanel';
-import { FileEdit, ShieldCheck, ExternalLink, BookOpen } from 'lucide-react';
+import { FileEdit, ShieldCheck, BookOpen } from 'lucide-react';
 import './App.css';
 
 export default function App() {
@@ -13,56 +13,34 @@ export default function App() {
 
   return (
     <div className="app-container">
-      {/* Top Header */}
+      {/* Simple Header with Harvest Logo */}
       <header className="header no-print">
         <div className="brand">
-          <div className="brand-icon">H</div>
-          <div className="title-area">
-            <h1>Harvest CV Platform</h1>
-            <p>De Harvester Schrijft Zijn Eigen CV</p>
+          <div className="logo-badge">
+            <img src="/harvest-logo.png" alt="Harvest" className="harvest-brand-logo" />
           </div>
+          <span className="header-divider">|</span>
+          <span className="header-subtitle">CV Generator</span>
         </div>
 
-        {/* Global Action Bar */}
-        <div className="header-actions">
-          <a 
-            href="https://github.com/CasHil/harvest-ai-hackathon" 
-            target="_blank" 
-            rel="noreferrer" 
-            className="btn-github-link"
-          >
-            GitHub Repo <ExternalLink size={14} />
-          </a>
-        </div>
-      </header>
-
-      {/* Main Navigation Tabs */}
-      <nav className="sub-nav no-print">
-        <div className="nav-tabs">
+        <nav className="header-nav">
           <button 
             className={`tab-btn ${activeTab === 'BUILDER' ? 'active' : ''}`}
             onClick={() => setActiveTab('BUILDER')}
           >
-            <FileEdit size={16} /> Harvester CV Builder
+            <FileEdit size={16} /> Harvester
           </button>
           <button 
             className={`tab-btn ${activeTab === 'PO_REVIEW' ? 'active' : ''}`}
             onClick={() => setActiveTab('PO_REVIEW')}
           >
-            <ShieldCheck size={16} /> Harvest Business Review
+            <ShieldCheck size={16} /> Business Review
             {cv.poReview.status === 'SUBMITTED' && <span className="notification-dot"></span>}
           </button>
-        </div>
+        </nav>
+      </header>
 
-        <div className="status-summary">
-          <span className="summary-label">Status:</span>
-          <span className={`status-pill status-${cv.poReview.status.toLowerCase()}`}>
-            {cv.poReview.status}
-          </span>
-        </div>
-      </nav>
-
-      {/* Main Split Layout */}
+      {/* Main Content */}
       <main className="main-content">
         <div className="split-grid">
           {/* Left Column: Interactive Controls */}
@@ -73,15 +51,15 @@ export default function App() {
               <POApprovalPanel cv={cv} onUpdateCV={setCv} />
             )}
 
-            {/* Quick Guidelines Card */}
+            {/* Richtlijnen Card */}
             <div className="info-card margin-top-md">
               <h4 className="info-title flex-align">
                 <BookOpen size={16} /> Harvest CV Richtlijnen
               </h4>
               <ul className="info-list text-xs">
-                <li>• <strong>Max 2 Pagina's:</strong> Strikte A4 paginering volgens schetsontwerp.</li>
+                <li>• <strong>Max 2 Pagina's:</strong> Strikte A4 paginering conform schetsen.</li>
                 <li>• <strong>Harvest Huisstijl:</strong> Groen (#092812), Rood (#782410) &amp; Creme tinten.</li>
-                <li>• <strong>Lokale Gegevens:</strong> Directe JSON import/export &amp; PDF download.</li>
+                <li>• <strong>Export:</strong> Ondersteuning voor JSON import/export en PDF download.</li>
               </ul>
             </div>
           </div>
@@ -92,16 +70,6 @@ export default function App() {
           </div>
         </div>
       </main>
-
-      {/* Footer */}
-      <footer className="footer no-print">
-        <div className="footer-left">
-          Harvest CPION-Geaccrediteerd IT Post-Master Program
-        </div>
-        <div className="footer-right">
-          Gedeployed op GitHub Pages • Standalone Local Browser App
-        </div>
-      </footer>
     </div>
   );
 }
