@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { HarvestCV } from '../types/cv';
-import { ShieldCheck, XCircle, CheckCircle, Search, DollarSign } from 'lucide-react';
+import { ShieldCheck, CheckCircle, XCircle, MessageSquare } from 'lucide-react';
 
 interface Props {
   cv: HarvestCV;
@@ -17,7 +17,7 @@ export const POApprovalPanel: React.FC<Props> = ({ cv, onUpdateCV }) => {
         ...cv.poReview,
         status: 'APPROVED',
         reviewDate: new Date().toLocaleDateString('nl-NL', { day: 'numeric', month: 'short', year: 'numeric' }),
-        feedback: feedback || 'Approved by Harvest Business Manager for client presentation.'
+        feedback: feedback || 'Goedgekeurd door Harvest Business Reviewer voor plaatsing bij klant.'
       }
     });
   };
@@ -28,7 +28,7 @@ export const POApprovalPanel: React.FC<Props> = ({ cv, onUpdateCV }) => {
       poReview: {
         ...cv.poReview,
         status: 'REJECTED',
-        feedback: feedback || 'Requires clarification on project achievements before client submission.'
+        feedback: feedback || 'Herziening vereist voor indienen bij klant.'
       }
     });
   };
@@ -37,7 +37,7 @@ export const POApprovalPanel: React.FC<Props> = ({ cv, onUpdateCV }) => {
     <div className="workbench-card po-panel">
       <div className="card-header">
         <h3 className="card-title flex-align">
-          <ShieldCheck className="icon-emerald" size={20} /> Harvest PO Review & Verification Hub
+          <ShieldCheck className="icon-emerald" size={20} /> Harvest Business Controle & Goedkeuring
         </h3>
         <span className={`status-pill status-${cv.poReview.status.toLowerCase()}`}>
           {cv.poReview.status}
@@ -45,83 +45,68 @@ export const POApprovalPanel: React.FC<Props> = ({ cv, onUpdateCV }) => {
       </div>
 
       <p className="card-desc">
-        Evaluate candidate profiles against Harvest CPION quality standards and verify bullet claims against ground truth sources.
+        Controleer de CV gegevens van de Harvester, voer directe aanpassingen uit en geef goedkeuring voor verzending naar opdrachtgevers.
       </p>
 
-      {/* Compliance Metric Cards */}
-      <div className="metric-cards-grid">
-        <div className="metric-card">
-          <div className="metric-title">Anti-Hallucination Score</div>
-          <div className="metric-value text-emerald">{cv.poReview.antiHallucinationScore}%</div>
-          <div className="metric-sub flex-align">
-            <Search size={12} /> 100% Ground Truth Traceable
-          </div>
+      {/* QUICK BUSINESS OVERVIEW */}
+      <div className="review-summary-card">
+        <div className="form-group">
+          <label className="field-label">Kandidaat Naam:</label>
+          <input 
+            type="text" 
+            className="input-sm"
+            value={cv.personalInfo.fullName}
+            onChange={e => onUpdateCV({
+              ...cv,
+              personalInfo: { ...cv.personalInfo, fullName: e.target.value }
+            })}
+          />
         </div>
-
-        <div className="metric-card">
-          <div className="metric-title">Estimated Token Cost</div>
-          <div className="metric-value">${cv.poReview.costInUSD.toFixed(3)}</div>
-          <div className="metric-sub flex-align">
-            <DollarSign size={12} /> Low Operating Overhead
-          </div>
+        <div className="form-group margin-top-xs">
+          <label className="field-label">Doelfunctie / Subtitle:</label>
+          <input 
+            type="text" 
+            className="input-sm"
+            value={cv.personalInfo.subtitle}
+            onChange={e => onUpdateCV({
+              ...cv,
+              personalInfo: { ...cv.personalInfo, subtitle: e.target.value }
+            })}
+          />
         </div>
-
-        <div className="metric-card">
-          <div className="metric-title">CPION Post-Master Status</div>
-          <div className="metric-value text-harvest">Accredited</div>
-          <div className="metric-sub">Harvest Format Verified</div>
-        </div>
-      </div>
-
-      {/* Ground Truth Claims Audit Table */}
-      <div className="audit-section">
-        <h4 className="audit-title">Ground Truth Anti-Hallucination Audit Trail</h4>
-        <div className="audit-table-wrapper">
-          <table className="audit-table">
-            <thead>
-              <tr>
-                <th>Generated CV Claim</th>
-                <th>Raw Source Evidence</th>
-                <th>Match Score</th>
-                <th>Status</th>
-              </tr>
-            </thead>
-            <tbody>
-              {cv.aiVerifications.map((v) => (
-                <tr key={v.bulletId}>
-                  <td className="text-xs font-medium">{v.bulletText}</td>
-                  <td className="text-xs text-muted">{v.sourceRawText}</td>
-                  <td>
-                    <span className="confidence-pill">{v.confidenceScore}%</span>
-                  </td>
-                  <td>
-                    <span className="badge-verified">
-                      <CheckCircle size={12} /> {v.status}
-                    </span>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
+        <div className="form-group margin-top-xs">
+          <label className="field-label">Profileringstekst (Business Edit):</label>
+          <textarea 
+            rows={3} 
+            className="textarea-input"
+            value={cv.personalInfo.summary}
+            onChange={e => onUpdateCV({
+              ...cv,
+              personalInfo: { ...cv.personalInfo, summary: e.target.value }
+            })}
+          />
         </div>
       </div>
 
-      {/* PO Review Action Box */}
-      <div className="po-action-box">
-        <label className="field-label">Harvest Product Owner Feedback / Notes:</label>
+      {/* FEEDBACK & APPROVAL CONTROLS */}
+      <div className="po-action-box margin-top-md">
+        <label className="field-label flex-align">
+          <MessageSquare size={14} /> Harvest Reviewer Feedback / Opmerkingen:
+        </label>
         <textarea 
-          rows={2}
+          rows={3}
           className="textarea-input"
           value={feedback}
           onChange={(e) => setFeedback(e.target.value)}
-          placeholder="Add review feedback for Harvester or client note..."
+          placeholder="Voeg opmerkingen toe voor de Harvester..."
         />
-        <div className="flex-gap-sm margin-top-sm">
-          <button className="btn-success" onClick={handleApprove}>
-            <CheckCircle size={16} /> Approve & Issue Harvest Stamp
+
+        <div className="flex-gap-sm margin-top-md">
+          <button className="btn-success flex-1" onClick={handleApprove}>
+            <CheckCircle size={16} /> Keur CV Goed (Harvest Stempel)
           </button>
-          <button className="btn-danger" onClick={handleReject}>
-            <XCircle size={16} /> Reject / Request Revision
+          <button className="btn-danger flex-1" onClick={handleReject}>
+            <XCircle size={16} /> Afkeuren / Aanpassing Vragen
           </button>
         </div>
       </div>

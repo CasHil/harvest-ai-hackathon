@@ -1,6 +1,6 @@
 import React from 'react';
 import { HarvestCV } from '../types/cv';
-import { ShieldCheck, Award, CheckCircle2, Download, Printer } from 'lucide-react';
+import { ShieldCheck, Download, Printer, User, MapPin, Calendar, BookOpen, Briefcase, FolderGit2 } from 'lucide-react';
 
 interface Props {
   cv: HarvestCV;
@@ -25,176 +25,249 @@ export const HarvestCVPreview: React.FC<Props> = ({ cv }) => {
 
   return (
     <div className="cv-preview-wrapper">
-      {/* Top Action Bar (hidden in print) */}
+      {/* Top Action Bar (hidden when printing) */}
       <div className="no-print cv-action-bar">
         <div className="status-indicator">
           <span className={`status-pill status-${cv.poReview.status.toLowerCase()}`}>
-            {cv.poReview.status}
+            PO Status: {cv.poReview.status}
           </span>
           {isApproved && (
             <span className="harvest-badge">
-              <ShieldCheck size={16} /> Harvest Verified
+              <ShieldCheck size={16} /> Harvest Goedgekeurd
             </span>
           )}
         </div>
         <div className="action-buttons">
           <button onClick={handleExportJSON} className="btn-secondary-sm">
-            <Download size={14} /> Export JSON
+            <Download size={14} /> Exporteer JSON
           </button>
           <button onClick={handlePrint} className="btn-primary-sm">
-            <Printer size={14} /> Print / Save as PDF
+            <Printer size={14} /> Download PDF / Print
           </button>
         </div>
       </div>
 
-      {/* Printable A4 Page Container */}
-      <div className="a4-page harvest-theme">
-        {/* Harvest Watermark Stamp for Approved CVs */}
-        {isApproved && (
-          <div className="approval-watermark">
-            <ShieldCheck size={80} className="watermark-icon" />
-            <div className="watermark-text">HARVEST APPROVED</div>
-            <div className="watermark-sub">{cv.poReview.reviewDate || 'CPION Post-Master Verified'}</div>
-          </div>
-        )}
-
-        {/* Header Header Banner */}
-        <header className="harvest-cv-header">
-          <div className="header-brand">
-            <div className="harvest-logo-box">H</div>
-            <div>
-              <div className="program-title">HARVEST IT POST-MASTER PROGRAM</div>
-              <div className="program-sub">CPION Accredited Post-Master Excellence</div>
+      {/* Printable A4 Pages Container */}
+      <div className="cv-pages-container">
+        
+        {/* ================= PAGE 1 ================= */}
+        <div className="a4-page harvest-theme-page" id="page-1">
+          {isApproved && (
+            <div className="approval-watermark">
+              <ShieldCheck size={64} />
+              <span>HARVEST GOEDGEKEURD</span>
             </div>
-          </div>
-          <div className="header-meta">
-            <div className="cohort-badge">{cv.personalInfo.cohort}</div>
-          </div>
-        </header>
+          )}
 
-        {/* Candidate Title Block */}
-        <section className="candidate-title-block">
-          <h1 className="candidate-name">{cv.personalInfo.fullName}</h1>
-          <h2 className="candidate-role">{cv.personalInfo.targetRole}</h2>
-          <div className="contact-line">
-            <span>{cv.personalInfo.email}</span> • <span>{cv.personalInfo.location}</span>
-            {cv.personalInfo.linkedin && <span> • {cv.personalInfo.linkedin}</span>}
-            {cv.personalInfo.github && <span> • {cv.personalInfo.github}</span>}
-          </div>
-        </section>
+          {/* PAGE 1 HEADER BLOCK */}
+          <header className="page-header">
+            <div className="header-info">
+              <div className="brand-tag">HARVEST IT POST-MASTER</div>
+              <h1 className="candidate-name">{cv.personalInfo.fullName || "Naam Harvester"}</h1>
+              <div className="candidate-subtitle">{cv.personalInfo.subtitle || "Functietitel"}</div>
+              <p className="candidate-summary">{cv.personalInfo.summary || "Korte profileringstekst..."}</p>
+            </div>
+            
+            {/* PHOTO BOX */}
+            <div className="photo-container">
+              {cv.personalInfo.photoUrl ? (
+                <img src={cv.personalInfo.photoUrl} alt={cv.personalInfo.fullName} className="candidate-photo" />
+              ) : (
+                <div className="photo-placeholder">
+                  <User size={48} className="photo-placeholder-icon" />
+                  <span>Foto</span>
+                </div>
+              )}
+            </div>
+          </header>
 
-        {/* Executive Summary */}
-        <section className="cv-section">
-          <h3 className="section-heading">Professional Profile</h3>
-          <p className="summary-text">{cv.personalInfo.summary}</p>
-        </section>
+          {/* PAGE 1 SPLIT BODY */}
+          <div className="page-body-grid">
+            {/* PAGE 1 LEFT SIDEBAR */}
+            <aside className="sidebar-col">
+              <div className="sidebar-box">
+                <h3 className="sidebar-title flex-align"><MapPin size={14} /> Woonplaats</h3>
+                <p className="sidebar-text">{cv.personalInfo.woonplaats || "Niet opgegeven"}</p>
+              </div>
 
-        {/* Skills Matrix */}
-        <section className="cv-section">
-          <h3 className="section-heading">Core Competencies & Skills</h3>
-          <div className="skills-grid">
-            {cv.skills.map((cat, idx) => (
-              <div key={idx} className="skill-cat-card">
-                <h4 className="skill-cat-title">{cat.category}</h4>
-                <div className="skill-tags">
-                  {cat.skills.map((skill, sIdx) => (
-                    <span key={sIdx} className="skill-chip">{skill}</span>
+              <div className="sidebar-box">
+                <h3 className="sidebar-title flex-align"><Calendar size={14} /> Beschikbaarheid</h3>
+                <p className="sidebar-text">{cv.personalInfo.beschikbaarheid || "Niet opgegeven"}</p>
+              </div>
+
+              <div className="sidebar-box">
+                <h3 className="sidebar-title">Skills</h3>
+                <ul className="sidebar-list">
+                  {cv.skills.length > 0 ? cv.skills.map((skill, idx) => (
+                    <li key={idx}>{skill}</li>
+                  )) : <li className="empty-text">Geen skills</li>}
+                </ul>
+              </div>
+
+              <div className="sidebar-box">
+                <h3 className="sidebar-title">Hobbies</h3>
+                <ul className="sidebar-list">
+                  {cv.hobbies.length > 0 ? cv.hobbies.map((hobby, idx) => (
+                    <li key={idx}>{hobby}</li>
+                  )) : <li className="empty-text">Geen hobbies</li>}
+                </ul>
+              </div>
+
+              <div className="sidebar-box">
+                <h3 className="sidebar-title">Talen</h3>
+                <ul className="sidebar-list">
+                  {cv.talen.length > 0 ? cv.talen.map((taal, idx) => (
+                    <li key={idx}>{taal}</li>
+                  )) : <li className="empty-text">Geen talen</li>}
+                </ul>
+              </div>
+            </aside>
+
+            {/* PAGE 1 MAIN CONTENT: OPLEIDING */}
+            <main className="main-col">
+              <section className="section-block">
+                <h2 className="section-title flex-align">
+                  <BookOpen size={18} /> Opleiding
+                </h2>
+                <div className="education-list">
+                  {cv.education.map((edu) => (
+                    <div key={edu.id} className="edu-card">
+                      <div className="card-header">
+                        <h4 className="edu-degree">{edu.degree}</h4>
+                        <span className="edu-year">{edu.year}</span>
+                      </div>
+                      <div className="edu-institution">{edu.institution}</div>
+                      {edu.details && <p className="edu-details">{edu.details}</p>}
+                    </div>
                   ))}
+                  {cv.education.length === 0 && <p className="empty-text">Geen opleidingen toegevoegd.</p>}
                 </div>
-              </div>
-            ))}
+              </section>
+            </main>
           </div>
-        </section>
 
-        {/* Project Highlights (Client Segment Focus) */}
-        <section className="cv-section">
-          <h3 className="section-heading">Featured Enterprise Projects</h3>
-          {cv.projects.map((proj) => (
-            <div key={proj.id} className="item-card">
-              <div className="item-header">
-                <div>
-                  <h4 className="item-title">{proj.title}</h4>
-                  <div className="item-sub">{proj.client} — <em>{proj.role}</em></div>
-                </div>
-                <div className="item-period">{proj.period}</div>
-              </div>
-              <p className="item-summary">{proj.summary}</p>
-              <ul className="item-bullet-list">
-                {proj.achievements.map((ach, aIdx) => (
-                  <li key={aIdx} className="bullet-point">
-                    {ach}
-                    <span className="no-print verified-inline-tag" title="Verified against ground truth input">
-                      <CheckCircle2 size={12} color="#10b981" /> Verified
-                    </span>
-                  </li>
-                ))}
-              </ul>
-              <div className="item-tech-stack">
-                <strong>Tech:</strong> {proj.techStack.join(' • ')}
-              </div>
-            </div>
-          ))}
-        </section>
-
-        {/* Experience Timeline */}
-        <section className="cv-section">
-          <h3 className="section-heading">Work Experience</h3>
-          {cv.experiences.map((exp) => (
-            <div key={exp.id} className="item-card">
-              <div className="item-header">
-                <div>
-                  <h4 className="item-title">{exp.role}</h4>
-                  <div className="item-sub">{exp.company} — {exp.location}</div>
-                </div>
-                <div className="item-period">{exp.startDate} – {exp.endDate}</div>
-              </div>
-              <p className="item-summary">{exp.description}</p>
-              <ul className="item-bullet-list">
-                {exp.highlights.map((h, hIdx) => (
-                  <li key={hIdx} className="bullet-point">
-                    {h}
-                    <span className="no-print verified-inline-tag" title="Verified source claim">
-                      <CheckCircle2 size={12} color="#10b981" /> Verified
-                    </span>
-                  </li>
-                ))}
-              </ul>
-            </div>
-          ))}
-        </section>
-
-        {/* Education & Certifications */}
-        <div className="two-column-section">
-          <section className="cv-section flex-1">
-            <h3 className="section-heading">Education</h3>
-            {cv.education.map((edu) => (
-              <div key={edu.id} className="edu-item">
-                <div className="edu-title">{edu.degree}</div>
-                <div className="edu-sub">{edu.institution} ({edu.year})</div>
-                {edu.certified && (
-                  <div className="certified-badge"><Award size={12} /> Verified Diploma</div>
-                )}
-              </div>
-            ))}
-          </section>
-
-          <section className="cv-section flex-1">
-            <h3 className="section-heading">Certifications</h3>
-            <ul className="cert-list">
-              {cv.certifications.map((cert, cIdx) => (
-                <li key={cIdx} className="cert-item">
-                  <Award size={14} className="cert-icon" /> {cert}
-                </li>
-              ))}
-            </ul>
-          </section>
+          <footer className="page-footer">
+            <span>Pagina 1 van 2</span>
+            <span>Harvest CPION-Geaccrediteerd IT Post-Master Program</span>
+          </footer>
         </div>
 
-        {/* Footer Compliance Note */}
-        <footer className="harvest-cv-footer">
-          <div>Harvest Post-Master Program • CPION Accredited Standard</div>
-          <div>Harvest PO Verified • Zero AI Hallucination Warranty</div>
-        </footer>
+        {/* ================= PAGE 2 ================= */}
+        <div className="a4-page harvest-theme-page" id="page-2">
+          {/* PAGE 2 SPLIT BODY */}
+          <div className="page-body-grid page-2-grid">
+            {/* PAGE 2 LEFT SIDEBAR */}
+            <aside className="sidebar-col">
+              <div className="sidebar-box">
+                <h3 className="sidebar-title">Softskills</h3>
+                <ul className="sidebar-list">
+                  {cv.softskills.length > 0 ? cv.softskills.map((item, idx) => (
+                    <li key={idx}>{item}</li>
+                  )) : <li className="empty-text">Geen softskills</li>}
+                </ul>
+              </div>
+
+              <div className="sidebar-box">
+                <h3 className="sidebar-title">Programmeertalen</h3>
+                <ul className="sidebar-list">
+                  {cv.programmeertalen.length > 0 ? cv.programmeertalen.map((item, idx) => (
+                    <li key={idx}>{item}</li>
+                  )) : <li className="empty-text">Geen talen</li>}
+                </ul>
+              </div>
+
+              <div className="sidebar-box">
+                <h3 className="sidebar-title">Tools</h3>
+                <ul className="sidebar-list">
+                  {cv.tools.length > 0 ? cv.tools.map((item, idx) => (
+                    <li key={idx}>{item}</li>
+                  )) : <li className="empty-text">Geen tools</li>}
+                </ul>
+              </div>
+
+              <div className="sidebar-box">
+                <h3 className="sidebar-title">Domein</h3>
+                <ul className="sidebar-list">
+                  {cv.domein.length > 0 ? cv.domein.map((item, idx) => (
+                    <li key={idx}>{item}</li>
+                  )) : <li className="empty-text">Geen domein</li>}
+                </ul>
+              </div>
+            </aside>
+
+            {/* PAGE 2 MAIN CONTENT: WERKERVARING & PROJECTEN */}
+            <main className="main-col">
+              {/* WERKERVARING */}
+              <section className="section-block">
+                <h2 className="section-title flex-align">
+                  <Briefcase size={18} /> Werkervaring
+                </h2>
+                <div className="items-list">
+                  {cv.experiences.map((exp) => (
+                    <div key={exp.id} className="cv-card">
+                      <div className="card-header">
+                        <div>
+                          <h4 className="card-role">{exp.role}</h4>
+                          <div className="card-sub">{exp.company} — {exp.location}</div>
+                        </div>
+                        <span className="card-period">{exp.startDate} - {exp.endDate}</span>
+                      </div>
+                      <p className="card-desc">{exp.description}</p>
+                      {exp.highlights && exp.highlights.length > 0 && (
+                        <ul className="bullet-list">
+                          {exp.highlights.map((hl, idx) => (
+                            <li key={idx}>{hl}</li>
+                          ))}
+                        </ul>
+                      )}
+                    </div>
+                  ))}
+                  {cv.experiences.length === 0 && <p className="empty-text">Geen werkervaring toegevoegd.</p>}
+                </div>
+              </section>
+
+              {/* PROJECTEN */}
+              <section className="section-block margin-top-sm">
+                <h2 className="section-title flex-align">
+                  <FolderGit2 size={18} /> Projecten
+                </h2>
+                <div className="items-list">
+                  {cv.projects.map((proj) => (
+                    <div key={proj.id} className="cv-card">
+                      <div className="card-header">
+                        <div>
+                          <h4 className="card-role">{proj.title}</h4>
+                          <div className="card-sub">{proj.client} — {proj.role}</div>
+                        </div>
+                        <span className="card-period">{proj.period}</span>
+                      </div>
+                      <p className="card-desc">{proj.summary}</p>
+                      {proj.techStack && proj.techStack.length > 0 && (
+                        <div className="tech-chips">
+                          <strong>Tech:</strong> {proj.techStack.join(', ')}
+                        </div>
+                      )}
+                      {proj.achievements && proj.achievements.length > 0 && (
+                        <ul className="bullet-list">
+                          {proj.achievements.map((ach, idx) => (
+                            <li key={idx}>{ach}</li>
+                          ))}
+                        </ul>
+                      )}
+                    </div>
+                  ))}
+                  {cv.projects.length === 0 && <p className="empty-text">Geen projecten toegevoegd.</p>}
+                </div>
+              </section>
+            </main>
+          </div>
+
+          <footer className="page-footer">
+            <span>Pagina 2 van 2</span>
+            <span>Harvest CPION-Geaccrediteerd IT Post-Master Program</span>
+          </footer>
+        </div>
+
       </div>
     </div>
   );
